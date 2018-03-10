@@ -19,6 +19,7 @@ This is a controversial statement for a lot of academics, but most folks that us
 
 In other words, always start with a bread-first look at any problem; including databases.
 
+https://db-engines.com/en/ranking_categories
 ## Step 1 - Understanding the Dimensions
 In order of popularity, here are the different types of databases **CATEGORIES**:
 1) Relational DBMS (77.5%)
