@@ -20,31 +20,30 @@ This is a controversial statement for a lot of academics, but most folks that us
 In other words, always start with a bread-first look at any problem; including databases.
 
 https://db-engines.com/en/ranking_categories
-## Step 1 - Understanding the Dimensions
+## Step 1 - Understanding the Categories
 In order of popularity, here are the different types of databases **CATEGORIES**:
-1) Relational DBMS (77.5%)
-2) Document Stores ()
-3) Key Value Stores
-3) Wide Column Stores
+1) Relational DBMS
+2) Document Stores
+3) Key-Value Stores
+4) Search Engines
+5) Wide Column Stores
+6) Graph DBMS
+7) Time Series DBMS
+8) RDF Stores
+9) Native XML DBMS
+10) Multivalue DBMS
+11) Object-Oriented DBMS
+12) Content Stores
+13) Navigational DBMS
+14) Event Stores
 
-In order of popularity (as of March 2018), here are the different types of database **MODELS**:
-Relational DBMS", y: 137, color: charts_color["Relational DBMS"]},
-Key-value stores", y: 65, color: charts_color["Key-value stores"]},
-Document stores", y: 44, color: charts_color["Document stores"]},
-Graph DBMS", y: 29, color: charts_color["Graph DBMS"]},
-Time Series DBMS", y: 23, color: charts_color["Time Series DBMS"]},
-RDF stores", y: 19, color: charts_color["RDF stores"]},
-Object oriented DBMS", y: 17, color: charts_color["Object oriented DBMS"]},
-Search engines", y: 17, color: charts_color["Search engines"]},
-Wide column stores", y: 11, color: charts_color["Wide column stores"]}  ]};
-Multivalue DBMS", y: 10, color: charts_color["Multivalue DBMS"]},
-Native XML DBMS", y: 8, color: charts_color["Native XML DBMS"]},
-Navigational DBMS", y: 2, color: charts_color["Navigational DBMS"]},
-Content stores", y: 2, color: charts_color["Content stores"]},
-Event Stores", y: 2, color: charts_color["Event Stores"]},
+Generally speaking, technologies hire on this list overlap with use-cases than technologies lower on the list. For example, Document Stores can store Object-Oriented meta-data rather quite nicely, but the later also exist for their own reason.
 
+###  NoSQL vs SQL
+Let's keep this relatively simple. SQL is one of the oldest technologies that we have in CS, and I mean that as a generally positive thing. When I think of relational schemas, I think of inituive and easy-to-deploy technologies that have been optimized to the nth degree, and are the defacto standard for 90% of use cases. I should note that there's an old-school mentality that argues that SQL can do it all, and it's mostly rooted in truth. Generally the strategy is to start here, and move to other alternatives based on necessity.
 
-SQL vs NoSQL
+NoSQL is a general bucket that denotes practically everything else on this list that doesn't fit in the category of Relational DBMS. Perhaps the data you're looking at is too large, decentralized, unstructured, timely, or relationship-centric for SQL to be your #1 choice. So keep an open mind and step forward into the world of DBs.
+
 
 
 ## Step 2 - Understanding Technologies
