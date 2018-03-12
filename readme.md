@@ -49,7 +49,15 @@ A lot of Apache's new databases are built on top of Hadoop File System (HDFS) su
 
 In a traditional database, a strict structure would be imposed immediately on incoming data; this is called schema-on-write and it trades write performance for fast reads. Schema-on-read will create meta-data for a file's structure only upon reading the file; thus speeding up writes.
 
+### The One-Thousand Year Storm
+In Civil and Environmental engineering there is this really nifty concept of the "100-year storm". Contrary to popular belief this does not mean that you should design a drainage system to accomodate 100 years worth of rain; that would be quite wasteful. The idea is to take the worst percipitation that you had to endure in the past 100 years in a given region, and see how your system handles under that stress.
+
+LeanTaas's 100 year storm is about 15 mb of data per day per region. We multiply this by some factor of safety, say 3, and we should anticipate 45 mb worth of data per day. In 10 years we should anticipate ~165GB in our raw-feeds table per region. Hospitals can have up to three regions, so I should be stress testing by querying 15mb of data on a table that contains about ~500GB worth of data. Keep in mind that big-data technologies can handle petabytes of information; I think half a TB is far from "big data" on its own.
+
 ## Step 2 - **C**onsistency, **A**valiability and **P**artition Tolerance
+
+
+![DB Technologies](./cap_theorem.png "DB Technologies")
 
 **Consistency** - A read executed on any node will return the same result. Not to be confused with ACID's consistency.
 
@@ -95,11 +103,6 @@ Some Observations:
 Understandably, with the increasing popularity of IOT, Time Series DBMS's are becoming a bit more popular. This type of database allows for high throughput of time-indexed data such that older data is less prioritized than newer data.
 
 Columnar (Wide-Column) Databases, Key-Value stores, and Document stores are the epitome of what people mean when they talk about "NoSQL" solutions, because none of these technologies need or use joins. Key-Value stores are great if you only query based on one primary key, and nothing else. Document stores are fantastic for unstructured data. Columnar databases are well designed to scan large  data-sets of data from top-to-bottom rather than from left-to-right.
-
-### The One-Thousand Year Storm
-In Civil and Environmental engineering there is this really nifty concept of the "100-year storm". Contrary to popular belief this does not mean that you should design your drainage to accomodate 100 years worth of rain; that would be quite wasteful. The idea is to take the worst percipitation that you had to endure in the past 100 years in a given region, and see how your system handles under that stress.
-
-LeanTaas's 100 year storm is about 15 mb of data per day per region. We multiply this by some factor of safety, say 3, and we should anticipate 45 mb worth of data per day. In 10 years we should anticipate ~165GB in our raw-feeds table per region. Hospitals can have up to three regions, so I should be stress testing for 15mb of data on a table that contains about ~500GB worth of data. Keep in mind that big-data technologies can handle petabytes of information; I think half a TB is far from "big data" on its own.
 
 ## Step 4 - Technologies and Models
 
