@@ -65,6 +65,7 @@ LeanTaas's 100 year storm is about 15 mb of data per day per region. We multiply
 
 **Partition Tolerance** - Horizontal scaling, by adding or subtracting more physical partitions, does not cripple the system. This is what people talk about most when they bring up 'web-scale' and 'sharding'.
 
+* *Note*: For more information, take a peak at [Robert Greiner's article on the CAP Theorem](http://robertgreiner.com/2014/08/cap-theorem-revisited/)
 
 Once upon a time the CAP theorem was proposed as a standard for choosing databases. The basic premise was that you can only pick two from the three 
 DB properties, and there was no such thing as a perfect solution. SQL traded 'P' for 'C' and 'A', and NoSQL technologies were each either trading 'C' or 'A' to get 'P' back.
