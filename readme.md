@@ -19,7 +19,6 @@ This is a controversial statement for a lot of academics, but most folks that us
 
 In other words, start with a bread-first look at any problem; including databases.
 
-https://db-engines.com/en/ranking_categories
 ## Step 1 - Understanding Vocabulary
 
 ###  NoSQL vs SQL
@@ -44,6 +43,11 @@ Oh boy, more acronyoms. These 4 letters denote the properties that are so covete
 (A) If my problem is a memory problem then maybe I buy bigger and/or better RAM. Say I have a reading or writing problem, then maybe I buy bigger and/or better harddrives and implement RAID 0 on my servers. If I'm using a cloud-service with Azure/AWS/Google then maybe I give them money for a bigger and/or better server. This is what we call **Vertical Scaling**, because I'm throwing money at my one server, thus dodging the issue entirely. If done well, this can get you a lot of milage.
 
 (B) If I'm using a traditional SQL solution, the absolute last thing I want to do is **Horizontal Scaling**. At best this means that I implement a leader-follower replication system on my servers to prospone the issue. At worst this means that we have to go full-blown denormalization and sharding; which (while entirely possible) SQL does not handle gracefully. Quite arguably, this is one of the biggest arguments against SQL in the modern 'web-scale' era.
+
+### Scheme-on-read & Data Lakes
+A lot of Apache's new databases are built on top of Hadoop File System (HDFS) such as Hive, Kudu, and HBase. The premise here is that you have a massive body of unstructured, raw data that gets stored into a file system. This data continually stacks up without being processed until we actually need it to be processed.
+
+In a traditional database, a strict structure would be imposed immediately on incoming data; this is called schema-on-write and it trades write performance for fast reads. Schema-on-read will create meta-data for a file's structure only upon reading the file; thus speeding up writes.
 
 ## Step 2 - **C**onsistency, **A**valiability and **P**artition Tolerance
 
@@ -83,13 +87,68 @@ Alright, do you have an idea of what you want now? Let's start by figuring out w
 
 ### Visualizing the Zeitguist as of 2018
 
-[INSERT VISUALIZATION #1]
+**Note:** All Charts and graphs were borrowed from [db-engines.com](https://db-engines.com/en/ranking_categories); which is a really cool website that you should check out
+
+![DB Technologies](./db_trends_2018.png "DB Technologies")
 
 Some Observations:
 Understandably, with the increasing popularity of IOT, Time Series DBMS's are becoming a bit more popular. This type of database allows for high throughput of time-indexed data such that older data is less prioritized than newer data.
 
 Columnar (Wide-Column) Databases, Key-Value stores, and Document stores are the epitome of what people mean when they talk about "NoSQL" solutions, because none of these technologies need or use joins. Key-Value stores are great if you only query based on one primary key, and nothing else. Document stores are fantastic for unstructured data. Columnar databases are well designed to scan large  data-sets of data from top-to-bottom rather than from left-to-right.
 
+### The One-Thousand Year Storm
+In Civil and Environmental engineering there is this really nifty concept of the "100-year storm". Contrary to popular belief this does not mean that you should design your drainage to accomodate 100 years worth of rain; that would be quite wasteful. The idea is to take the worst percipitation that you had to endure in the past 100 years in a given region, and see how your system handles under that stress.
+
+LeanTaas's 100 year storm is about 15 mb of data per day per region. We multiply this by some factor of safety, say 3, and we should anticipate 45 mb worth of data per day. In 10 years we should anticipate ~165GB in our raw-feeds table per region. Hospitals can have up to three regions, so I should be stress testing for 15mb of data on a table that contains about ~500GB worth of data. Keep in mind that big-data technologies can handle petabytes of information; I think half a TB is far from "big data" on its own.
+
 ## Step 4 - Technologies and Models
 
-[INSERT VISUALIZATION #2]
+![DB Technologies](./db_piecharts_2018.png "DB Technologies")
+
+### Data Lake Applications
+#### Apache Hive
+Schema on Read File Store, rather than Schema on write
+Taking existing data on the cluster and applying meta-data as its read in with managed & external data.
+High Read / Write Throughput directly on an HDFS
+Not meant for high availability, or being hit with multiple queries simultaneously
+Not great with partioning
+#### Apache HBase
+Columnar-Oriented Database; good for fast analytics on sparse datasets (meaning null/meaningless rows are expected)
+Each table must have a primary key, and all attempts to access a row must use this primary key
+Intended for sequential reads/writes, and data-lake applications. Runs on top of HDFS. More anaylitics-friendly.
+#### Apache Cassandra
+NoSQL rather than columnar database; instead it writes based on designated keyspaces and column-families.
+Still reads right to left, up to down; not columnar database. Not great with sparse datasets.
+Intended for high availability and constant queries. Consistency is made second, but Cassandra can be configured for high consistency.
+Intended for random-access, always-on applications
+#### Apache Kudu
+* Fast Analytics on Fast-Changing Data
+* Sacrifices on high avaliability (a bit more than HBase) for write throughput
+* Unlike HDFS this allow for more than append only operations (i.e: upserting)
+* As of 2018 this is a newer database with high potential.
+#### Amazon RedShift + S3
+* S3 is a distributed file store as a service, and RedShift is a Columnar-Oriented Database. Amazon provides a service that inserts S3 files onto RedShift in a highly parallized manner.
+* Amazon also provides Apache Spark integration with RedShift.
+* The analogy to HDFS and HBase can most certainly be made; with [pros & cons constantly being added to both sides](https://www.xplenty.com/blog/hadoop-vs-redshift/)
+
+#### How to Decide between Data Lake Applications
+![Data Lake Databases](./hadoop_tech.png "Data Lake Databases")
+On The Very Left we have HDFS w/hive for basic query-on-read abilities.
+
+Next we have Apache Kudu which bridges the gap between fast changing data and highly available analytics on that data.
+
+After that we have HBase, which is good for strongly consistent and partition-friendly analytics on data with decent availability. It's better with random access of data than Kudu, but this is still not intended to be used for web-facing applications that need high availability.
+
+Cassandra goes off the scale to the far right where availability is valued higher than consistancy. However, take the CAP theorem with a grain of salt because you can configure Cassandra to value consistancy over speed. However, the end result is to use Cassandra if you're looking for a NoSQL, highly available, web-facing database that can handle large PBs of data. However, Cassandra is not great with large singular scans.
+
+Then you have the S3 + Redshift alternative to all this Apache technologies, which is most comparable to HBase and HDFS. Strong consistency for large scans with columnar analytics. 
+
+
+
+
+
+
+
+
+
+
